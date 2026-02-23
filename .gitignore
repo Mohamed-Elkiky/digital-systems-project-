@@ -1,0 +1,42 @@
+# Data
+data/raw/
+data/processed/
+runs/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Env files
+.env
+
+# Dashboard user database (contains hashed passwords & API keys — keep local)
+data/users.json
+
+# Model artifacts
+*.pt
+*.pth
+*.pkl
+*.joblib
+!configs/*.yaml

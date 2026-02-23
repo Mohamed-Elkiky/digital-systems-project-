@@ -1,0 +1,30 @@
+# ============================================================
+# DQN configuration
+# Inherits from base.yaml; only overrides / adds DQN params.
+# ============================================================
+
+algorithm: "dqn"
+
+dqn:
+  # Network architecture
+  hidden_sizes: [128, 64]
+  activation: "relu"
+  # Training hyper-parameters
+  learning_rate: 0.0003
+  gamma: 0.99
+  batch_size: 64
+  buffer_size: 50000
+  target_update_freq: 1000       # steps between hard target updates
+  # Epsilon schedule
+  epsilon_start: 1.0
+  epsilon_end: 0.01
+  epsilon_decay_steps: 50000     # linear decay over this many steps
+  # Double DQN
+  double_dqn: true
+  # Training
+  episodes: 500
+  max_steps_per_episode: 0       # 0 = full episode
+  warmup_steps: 1000             # fill buffer before learning
+
+env:
+  reward_type: "log_return"

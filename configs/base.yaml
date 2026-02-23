@@ -1,0 +1,76 @@
+# ============================================================
+# Base configuration — Autonomous RL Trading Bot
+# All algorithm-specific configs inherit / override these values.
+# ============================================================
+
+# ---- Data settings ----
+data:
+  symbol: "BTC-USD"
+  start_date: "2020-01-01"
+  end_date: "2025-12-31"
+  source: "yfinance"            # yfinance | csv
+  csv_path: null                # only used when source == csv
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+
+# ---- Feature engineering ----
+features:
+  window_size: 50               # look-back window fed to agent
+  sma_periods: [10, 30, 50]
+  ema_periods: [12, 26]
+  rsi_period: 14
+  macd_fast: 12
+  macd_slow: 26
+  macd_signal: 9
+  atr_period: 14
+  volatility_period: 20
+  volume_sma_period: 20
+
+# ---- Train / Val / Test split (by fraction of sorted dates) ----
+split:
+  train_frac: 0.70
+  val_frac: 0.15
+  test_frac: 0.15
+
+# ---- Trading environment ----
+env:
+  initial_cash: 10000.0
+  transaction_cost_pct: 0.001   # 0.1 %
+  slippage_pct: 0.0005          # 0.05 %
+  max_position: 1.0             # max units held (legacy guard)
+  reward_type: "log_return"     # log_return | sharpe
+  drawdown_penalty: 0.5
+  early_stop_max_drawdown: 0.30 # stop episode if drawdown > 30 %
+
+  # --- Leverage limit ---
+  # Exposure (position × price) is capped at max_leverage × equity.
+  # 1.0 = no borrowing (all-equity, 100 % max allocation to asset).
+  max_leverage: 1.0
+
+  # --- Position sizing ---
+  # "fixed_fraction"  — spend position_size_frac of available cash per buy.
+  # "atr_volatility"  — size position so ATR-stop risk ≤ risk_per_trade × equity.
+  position_sizing: "fixed_fraction"
+  position_size_frac: 0.10      # fraction of cash to spend per buy (fixed mode)
+  risk_per_trade: 0.01          # max fraction of equity to risk per trade (ATR mode)
+  atr_mult: 2.0                 # ATR multiplier: stop distance = atr_mult × ATR
+  max_position_value: 0.50      # hard cap: spend ≤ max_position_value × equity (ATR mode)
+
+# ---- Risk management (stop-loss) ----
+risk:
+  stop_loss_type: "percent"     # percent | atr
+  stop_loss_pct: 0.05           # 5 % — used when stop_loss_type == percent
+  stop_loss_atr_mult: 2.0       # ATR multiplier — used when stop_loss_type == atr
+
+# ---- General training ----
+training:
+  seed: 42
+  episodes: 500
+  eval_every: 50
+  log_interval: 10
+  save_best: true
+  patience: 100                 # early stopping patience (episodes)
+
+# ---- Runs output ----
+output:
+  runs_dir: "runs"

@@ -1,0 +1,26 @@
+# ============================================================
+# Q-Learning (tabular) configuration
+# Inherits from base.yaml; only overrides / adds Q-learning params.
+# ============================================================
+
+algorithm: "qlearning"
+
+qlearning:
+  # Discretisation
+  n_bins: 10                     # number of bins per feature dimension
+  features_used:                 # which features to include in state
+    - "rsi"
+    - "macd_hist"
+    - "volatility"
+    - "position"
+  # Hyper-parameters
+  alpha: 0.1                     # learning rate
+  gamma: 0.99                    # discount factor
+  epsilon_start: 1.0
+  epsilon_end: 0.01
+  epsilon_decay: 0.995           # multiplicative per episode
+  # Training
+  episodes: 1000
+
+env:
+  reward_type: "log_return"

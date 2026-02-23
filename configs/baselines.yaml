@@ -1,0 +1,12 @@
+# ============================================================
+# Baselines configuration
+# ============================================================
+
+baselines:
+  buy_hold:
+    enabled: true
+
+  ma_crossover:
+    enabled: true
+    fast_window: 10
+    slow_window: 50

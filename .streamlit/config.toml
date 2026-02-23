@@ -1,0 +1,11 @@
+[client]
+# "viewer" removes the deploy button and the hamburger settings menu
+# (including the built-in theme selector) from the toolbar entirely.
+toolbarMode = "viewer"
+
+[theme]
+base                  = "dark"
+primaryColor          = "#4f8bf9"
+backgroundColor       = "#0e1117"
+secondaryBackgroundColor = "#1c2333"
+textColor             = "#fafafa"

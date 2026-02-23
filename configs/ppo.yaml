@@ -1,0 +1,31 @@
+# ============================================================
+# PPO configuration (via Stable-Baselines3)
+# Inherits from base.yaml; only overrides / adds PPO params.
+# ============================================================
+
+algorithm: "ppo"
+
+ppo:
+  action_type: "discrete"         # discrete | continuous
+  # SB3 PPO hyper-parameters
+  learning_rate: 0.0003
+  n_steps: 2048
+  batch_size: 64
+  n_epochs: 10
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  # Network architecture
+  net_arch:
+    pi: [64, 64]
+    vf: [64, 64]
+  # Training
+  total_timesteps: 200000
+  eval_freq: 10000
+  n_eval_episodes: 5
+
+env:
+  reward_type: "log_return"
