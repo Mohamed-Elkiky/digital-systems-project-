@@ -18,9 +18,9 @@ qlearning:
   gamma: 0.99                    # discount factor
   epsilon_start: 1.0
   epsilon_end: 0.01
-  epsilon_decay: 0.995           # multiplicative per episode
+  epsilon_decay: 0.998           # multiplicative per episode
   # Training
-  episodes: 1000
+  episodes: 2000
 
 env:
   reward_type: "log_return"

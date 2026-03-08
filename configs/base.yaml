@@ -39,7 +39,7 @@ env:
   slippage_pct: 0.0005          # 0.05 %
   max_position: 1.0             # max units held (legacy guard)
   reward_type: "log_return"     # log_return | sharpe
-  drawdown_penalty: 0.5
+  drawdown_penalty: 0.2
   early_stop_max_drawdown: 0.30 # stop episode if drawdown > 30 %
 
   # --- Leverage limit ---
@@ -51,7 +51,7 @@ env:
   # "fixed_fraction"  — spend position_size_frac of available cash per buy.
   # "atr_volatility"  — size position so ATR-stop risk ≤ risk_per_trade × equity.
   position_sizing: "fixed_fraction"
-  position_size_frac: 0.10      # fraction of cash to spend per buy (fixed mode)
+  position_size_frac: 0.30      # fraction of cash to spend per buy (fixed mode)
   risk_per_trade: 0.01          # max fraction of equity to risk per trade (ATR mode)
   atr_mult: 2.0                 # ATR multiplier: stop distance = atr_mult × ATR
   max_position_value: 0.50      # hard cap: spend ≤ max_position_value × equity (ATR mode)

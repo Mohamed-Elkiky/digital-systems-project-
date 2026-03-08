@@ -15,7 +15,7 @@ ppo:
   gamma: 0.99
   gae_lambda: 0.95
   clip_range: 0.2
-  ent_coef: 0.01
+  ent_coef: 0.05
   vf_coef: 0.5
   max_grad_norm: 0.5
   # Network architecture
@@ -23,7 +23,7 @@ ppo:
     pi: [64, 64]
     vf: [64, 64]
   # Training
-  total_timesteps: 200000
+  total_timesteps: 500000
   eval_freq: 10000
   n_eval_episodes: 5
 
