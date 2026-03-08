@@ -107,14 +107,19 @@ def _inject_css() -> None:
         h1,h2,h3,h4                             {{ color:{T['text']}; }}
         .stCaption                              {{ color:{T['muted']}; }}
         .stDataFrame                             {{ border-radius:12px; overflow:hidden; border:1px solid {T['border']}; }}
+        [data-testid="stExpander"]               {{ background:{T['surface']} !important; border:1px solid {T['border']} !important; border-radius:10px !important; }}
+        [data-testid="stExpander"] summary       {{ background:{T['surface']} !important; color:{T['text']} !important; border-radius:10px !important; }}
+        [data-testid="stExpander"] summary:hover {{ background:{T['surface2']} !important; }}
+        [data-testid="stExpanderDetails"]        {{ background:{T['surface']} !important; }}
+        [data-baseweb="select"] > div            {{ background:{T['surface']} !important; border-color:{T['border']} !important; }}
+        [data-baseweb="menu"]                    {{ background:{T['surface']} !important; }}
+        [data-baseweb="option"]                  {{ background:{T['surface']} !important; color:{T['text']} !important; }}
+        [data-baseweb="option"]:hover            {{ background:{T['surface2']} !important; }}
+        [data-baseweb="tag"]                     {{ background:{T['accent']}22 !important; color:{T['text']} !important; }}
         </style>
         """,
         unsafe_allow_html=True,
     )
-
-
-_inject_css()
-
 
 # ---------------------------------------------------------------------------
 # Reusable components
@@ -228,6 +233,7 @@ def _parse_run_name(name: str) -> dict[str, str]:
 # ---------------------------------------------------------------------------
 
 def _topbar() -> None:
+    _inject_css()
     col_title, col_gap, col_theme = st.columns([5, 7, 1.2])
     with col_title:
         st.markdown(
@@ -243,7 +249,7 @@ def _topbar() -> None:
     with col_theme:
         if st.button(
             "🌞" if st.session_state.dark_mode else "🌙",
-            help="Toggle light / dark theme",
+            help=None,
             use_container_width=True,
             key="topbar_theme",
         ):
@@ -284,7 +290,6 @@ def _page_dashboard() -> None:
         )
         return
 
-    # ── Run selector ──────────────────────────────────────────────────────
     run_names = [r.name for r in runs]
 
     with st.expander("🔬 Select experiment runs to display", expanded=True):
@@ -374,7 +379,6 @@ def _page_dashboard() -> None:
         "🏆  Metrics Table",
     ])
 
-    # --- Equity ---
     with t_eq:
         _section_hdr("Equity Curves", "Portfolio value over the test period")
         fig = go.Figure()
@@ -397,7 +401,6 @@ def _page_dashboard() -> None:
         fig.update_yaxes(tickprefix="$")
         st.plotly_chart(fig, use_container_width=True)
 
-    # --- Drawdown ---
     with t_dd:
         _section_hdr("Drawdown", "% decline from peak portfolio value")
         fig = go.Figure()
@@ -414,8 +417,8 @@ def _page_dashboard() -> None:
                     fill="tozeroy", fillcolor=_hex_rgba(c, .12),
                 ))
                 dd_rows.append({
-                    "Strategy":    tag.upper(),
-                    "Run":         rd.name[:40],
+                    "Strategy":     tag.upper(),
+                    "Run":          rd.name[:40],
                     "Max Drawdown": f"{dd.max():.2f}%",
                     "Avg Drawdown": f"{dd.mean():.2f}%",
                 })
@@ -425,12 +428,9 @@ def _page_dashboard() -> None:
         if dd_rows:
             st.dataframe(pd.DataFrame(dd_rows), use_container_width=True, hide_index=True)
 
-    # --- Trades ---
     with t_tr:
         _section_hdr("Trade Signals", "Buy / Sell markers overlaid on price")
-        sym_input = st.text_input(
-            "Symbol (for price data lookup)", value="BTC-USD"
-        )
+        sym_input = st.text_input("Symbol (for price data lookup)", value="BTC-USD")
         price_path = PROJECT_ROOT / "data" / "processed" / sym_input / "test_raw.csv"
         if price_path.exists():
             price_df = pd.read_csv(price_path, parse_dates=True, index_col=0)
@@ -484,7 +484,6 @@ def _page_dashboard() -> None:
                 "Run `python -m src.cli.preprocess --symbol BTC-USD` first."
             )
 
-    # --- Positions ---
     with t_pos:
         _section_hdr("Portfolio Value Over Time", "Per-strategy equity progression")
         for i, rd in enumerate(selected_dirs):
@@ -501,7 +500,6 @@ def _page_dashboard() -> None:
                 fig.update_yaxes(tickprefix="$")
                 st.plotly_chart(fig, use_container_width=True)
 
-    # --- Metrics Table ---
     with t_met:
         _section_hdr("Full Metrics Comparison")
         rows = []
@@ -521,7 +519,6 @@ def _page_dashboard() -> None:
                 })
         if rows:
             st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
-
             if len(rows) > 1:
                 st.markdown(
                     f'<div style="border-top:1px solid {T["border"]};'
