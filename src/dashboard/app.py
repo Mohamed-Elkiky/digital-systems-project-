@@ -184,11 +184,18 @@ def _chart_base(fig: go.Figure, *, title: str = "", height: int = 420) -> go.Fig
 def _list_runs() -> list[Path]:
     if not RUNS_DIR.exists():
         return []
-    return sorted(
+    seen_algos = set()
+    result = []
+    for d in sorted(
         [d for d in RUNS_DIR.iterdir() if d.is_dir()],
         key=lambda p: p.name,
         reverse=True,
-    )
+    ):
+        for algo in ("dqn", "ppo", "qlearning"):
+            if algo in d.name.lower() and algo not in seen_algos:
+                seen_algos.add(algo)
+                result.append(d)
+    return result
 
 
 def _load_metrics(run_dir: Path) -> dict[str, dict]:
